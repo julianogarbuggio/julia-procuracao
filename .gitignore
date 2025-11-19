@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Virtual envs
+.venv/
+env/
+venv/
+
+# VSCode
+.vscode/
+
+# IDEs
+.idea/
+*.iml
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# Output / temporários
+app/saida/
+*.zip
+*.tar.gz
+*.log
+
+# Documentos temporários
+~$*.docx
+~$*.doc
+~$*.pdf
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+# Railway / Docker cache
+.cache/
+docker-cache/
