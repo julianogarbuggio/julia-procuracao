@@ -95,8 +95,11 @@ def parse_bloco(texto: str) -> dict:
 
         # CIDADE "Maringá - ESTADO: PR" -> CIDADE=Maringá / ESTADO=PR
         if "cidade" in lab and "estado" in lab:
-            m = re.search(r"^\s*([^,\-]+)[,\-]?\s*(?:estado\s*:\s*|uf\s*:\s*)?([A-Za-z]{2})\s*$",
-                          value, flags=re.IGNORECASE)
+            m = re.search(
+                r"^\s*([^,\-]+)[,\-]?\s*(?:estado\s*:\s*|uf\s*:\s*)?([A-Za-z]{2})\s*$",
+                value,
+                flags=re.IGNORECASE,
+            )
             if m:
                 ctx["CIDADE"] = m.group(1).strip()
                 ctx["ESTADO"] = m.group(2).upper()
@@ -105,8 +108,11 @@ def parse_bloco(texto: str) -> dict:
             continue
 
         if "cidade" in lab:
-            m = re.search(r"^\s*([^,\-]+)\s*[-,]\s*(?:estado\s*:\s*|uf\s*:\s*)?([A-Za-z]{2})\s*$",
-                          value, flags=re.IGNORECASE)
+            m = re.search(
+                r"^\s*([^,\-]+)\s*[-,]\s*(?:estado\s*:\s*|uf\s*:\s*)?([A-Za-z]{2})\s*$",
+                value,
+                flags=re.IGNORECASE,
+            )
             if m:
                 ctx["CIDADE"] = m.group(1).strip()
                 ctx["ESTADO"] = m.group(2).upper()
@@ -125,13 +131,30 @@ def parse_bloco(texto: str) -> dict:
 
 def escolher_modelo() -> Path | None:
     preferido = DOCS_DIR / "documentos_acao.docx"
-    if preferido.exists(): return preferido
+    if preferido.exists():
+        return preferido
     preferido2 = DOCS_DIR / "documentos acao.docx"
-    if preferido2.exists(): return preferido2
+    if preferido2.exists():
+        return preferido2
     for p in sorted(DOCS_DIR.glob("*.docx")):
-        if "~$" in p.name: continue
+        if "~$" in p.name:
+            continue
         return p
     return None
+
+# --------- helper de nome: 02_Procuracao_Consig_Nome_Autor.ext ----------
+def gerar_nome_arquivo(nome: str, extensao: str) -> Path:
+    """
+    Gera caminho na pasta SAIDA com o formato:
+    02_Procuracao_Consig_Nome_Autor.ext
+    """
+    if not nome:
+        sufixo = "Autor"
+    else:
+        # troca espaços por "_" e remove duplos
+        sufixo = re.sub(r"\s+", "_", nome.strip())
+    filename = f"02_Procuracao_Consig_{sufixo}.{extensao}"
+    return SAIDA_DIR / filename
 
 # ---------------- negrito APENAS no nome, preservando fonte ----------------
 def _apply_base_font(dst_run, base_run):
@@ -145,8 +168,9 @@ def _apply_base_font(dst_run, base_run):
         rPr = dst_run._element.get_or_add_rPr()
         rFonts = rPr.rFonts
         if rFonts is None:
-            rFonts = OxmlElement('w:rFonts'); rPr.append(rFonts)
-        for key in ('w:ascii','w:hAnsi','w:eastAsia','w:cs'):
+            rFonts = OxmlElement("w:rFonts")
+            rPr.append(rFonts)
+        for key in ("w:ascii", "w:hAnsi", "w:eastAsia", "w:cs"):
             rFonts.set(qn(key), f_base.name)
     # demais atributos úteis
     f_dst.size   = f_base.size
@@ -169,8 +193,10 @@ def _bold_substring_in_paragraph(paragraph, target: str):
     idxs, start = [], 0
     while True:
         i = full.find(target, start)
-        if i == -1: break
-        idxs.append((i, i+len(target))); start = i+len(target)
+        if i == -1:
+            break
+        idxs.append((i, i + len(target)))
+        start = i + len(target)
     if not idxs:
         return
 
@@ -206,12 +232,20 @@ def bold_nome_everywhere(docx_path: Path, nome: str):
                         _bold_substring_in_paragraph(p, nome)
         doc.save(str(docx_path))
     except Exception:
+        # se der erro, não derruba o fluxo; só não aplica o bold
         pass
 
 def try_convert_with_soffice(src_docx: Path, dst_pdf: Path) -> bool:
     try:
-        cmd = ["soffice", "--headless", "--convert-to", "pdf",
-               "--outdir", str(dst_pdf.parent), str(src_docx)]
+        cmd = [
+            "soffice",
+            "--headless",
+            "--convert-to",
+            "pdf",
+            "--outdir",
+            str(dst_pdf.parent),
+            str(src_docx),
+        ]
         subprocess.run(cmd, capture_output=True, text=True, timeout=120)
         return dst_pdf.exists()
     except Exception:
@@ -235,51 +269,86 @@ async def gerar_docx(dados: str = Form(...)):
     try:
         modelo = escolher_modelo()
         if not modelo:
-            return PlainTextResponse("Modelo .docx não encontrado em app/documentos.", status_code=500)
+            return PlainTextResponse(
+                "Modelo .docx não encontrado em app/documentos.",
+                status_code=500,
+            )
         ctx = parse_bloco(dados)
+        nome_autor = ctx.get("NOME", "").strip()
+
         with TemporaryDirectory() as tmpdir:
             tmpdir   = Path(tmpdir)
             out_docx = tmpdir / "saida.docx"
-            tpl = DocxTemplate(str(modelo)); tpl.render(ctx); tpl.save(str(out_docx))
-            bold_nome_everywhere(out_docx, ctx.get("NOME",""))
-            final_docx = SAIDA_DIR / f"{ctx.get('NOME','documento').replace(' ','_')}_gerado.docx"
+            tpl = DocxTemplate(str(modelo))
+            tpl.render(ctx)
+            tpl.save(str(out_docx))
+
+            bold_nome_everywhere(out_docx, nome_autor)
+
+            final_docx = gerar_nome_arquivo(nome_autor, "docx")
             final_docx.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(out_docx, final_docx)
+
             return FileResponse(final_docx, filename=final_docx.name)
     except Exception:
-        (SAIDA_DIR / "stacktrace.txt").write_text(traceback.format_exc(), encoding="utf-8")
-        return PlainTextResponse("Erro ao gerar DOCX. Veja app/saida/stacktrace.txt", status_code=500)
+        (SAIDA_DIR / "stacktrace.txt").write_text(
+            traceback.format_exc(), encoding="utf-8"
+        )
+        return PlainTextResponse(
+            "Erro ao gerar DOCX. Veja app/saida/stacktrace.txt",
+            status_code=500,
+        )
 
 @app.post("/gerar-pdf")
 async def gerar_pdf(dados: str = Form(...)):
     try:
         modelo = escolher_modelo()
         if not modelo:
-            return PlainTextResponse("Modelo .docx não encontrado em app/documentos.", status_code=500)
+            return PlainTextResponse(
+                "Modelo .docx não encontrado em app/documentos.",
+                status_code=500,
+            )
         ctx = parse_bloco(dados)
+        nome_autor = ctx.get("NOME", "").strip()
+
         with TemporaryDirectory() as tmpdir:
             tmpdir   = Path(tmpdir)
             out_docx = tmpdir / "saida.docx"
-            tpl = DocxTemplate(str(modelo)); tpl.render(ctx); tpl.save(str(out_docx))
-            bold_nome_everywhere(out_docx, ctx.get("NOME",""))
+            tpl = DocxTemplate(str(modelo))
+            tpl.render(ctx)
+            tpl.save(str(out_docx))
+
+            bold_nome_everywhere(out_docx, nome_autor)
+
             out_pdf = tmpdir / "saida.pdf"
             ok = False
+
             if DOCX2PDF_OK:
                 try:
                     docx2pdf_convert(str(out_docx), str(out_pdf))
                     ok = out_pdf.exists()
                 except Exception:
                     ok = False
+
             if not ok:
                 ok = try_convert_with_soffice(out_docx, out_pdf)
+
             if ok:
-                final = SAIDA_DIR / f"{ctx.get('NOME','documento').replace(' ','_')}_gerado.pdf"
-                shutil.copyfile(out_pdf, final)
-                return FileResponse(final, filename=final.name)
+                final_pdf = gerar_nome_arquivo(nome_autor, "pdf")
+                final_pdf.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(out_pdf, final_pdf)
+                return FileResponse(final_pdf, filename=final_pdf.name)
             else:
-                final_docx = SAIDA_DIR / f"{ctx.get('NOME','documento').replace(' ','_')}_gerado.docx"
+                # fallback: devolve DOCX no padrão 02_Procuracao_Consig_...
+                final_docx = gerar_nome_arquivo(nome_autor, "docx")
+                final_docx.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(out_docx, final_docx)
                 return FileResponse(final_docx, filename=final_docx.name)
     except Exception:
-        (SAIDA_DIR / "stacktrace.txt").write_text(traceback.format_exc(), encoding="utf-8")
-        return PlainTextResponse("Erro ao gerar PDF. Veja app/saida/stacktrace.txt", status_code=500)
+        (SAIDA_DIR / "stacktrace.txt").write_text(
+            traceback.format_exc(), encoding="utf-8"
+        )
+        return PlainTextResponse(
+            "Erro ao gerar PDF. Veja app/saida/stacktrace.txt",
+            status_code=500,
+        )
