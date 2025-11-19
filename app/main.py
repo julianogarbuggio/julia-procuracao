@@ -27,7 +27,7 @@ STATIC_DIR= BASE_DIR / "static"
 for p in (DOCS_DIR, SAIDA_DIR, STATIC_DIR, TPL_DIR):
     p.mkdir(parents=True, exist_ok=True)
 
-app = FastAPI(title="Jul.IA – Automação PDF & DOCX")
+app = FastAPI(title="Jul.IA – Automação de Procuração e Consignado")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TPL_DIR))
 
@@ -122,12 +122,9 @@ def parse_bloco(texto: str) -> dict:
     return ctx
 
 def escolher_modelo() -> Path | None:
-    preferido = DOCS_DIR / "documentos_acao.docx"
+    preferido = DOCS_DIR / "procuracao_consignado.docx"
     if preferido.exists():
         return preferido
-    preferido2 = DOCS_DIR / "documentos acao.docx"
-    if preferido2.exists():
-        return preferido2
     for p in sorted(DOCS_DIR.glob("*.docx")):
         if "~$" in p.name:
             continue
