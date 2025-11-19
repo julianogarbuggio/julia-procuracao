@@ -11,9 +11,6 @@ import traceback, shutil, subprocess, re, unicodedata
 
 from docxtpl import DocxTemplate
 from docx import Document
-# >>> correção dos imports do python-docx:
-from docx.oxml import OxmlElement
-from docx.oxml.shared import qn
 
 try:
     from docx2pdf import convert as docx2pdf_convert
@@ -34,7 +31,6 @@ app = FastAPI(title="Jul.IA – Automação PDF & DOCX")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TPL_DIR))
 
-# ----------------------------- Utils -----------------------------
 def _norm(s: str) -> str:
     s = unicodedata.normalize("NFKD", s)
     s = ''.join(ch for ch in s if not unicodedata.combining(ch))
@@ -62,7 +58,6 @@ def parse_bloco(texto: str) -> dict:
         if "estado civil" in lab:       ctx["ESTADO_CIVIL"] = value; continue
         if "profiss" in lab:            ctx["PROFISSAO"] = value; continue
 
-        # RG "... - ESTADO: PR" -> "... - PR"
         if lab.startswith("rg"):
             num = value
             m = re.search(r"(?:estado\s*:\s*)?([A-Za-z]{2})\s*$", value, flags=re.IGNORECASE)
@@ -77,12 +72,10 @@ def parse_bloco(texto: str) -> dict:
 
         if "cpf" in lab:                ctx["CPF"] = value; continue
 
-        # ENDEREÇO COMPLETO -> LOGRADOURO/NUMERO/COMPLEMENTO
         if "endereco" in lab or "endereço" in lab:
             mlog  = re.search(r"^\s*(.*?)(?:,|$)", value)
             ctx["LOGRADOURO"] = (mlog.group(1).strip() if mlog else value)
 
-            # só pega "nº / n. / no:" após início ou vírgula (evita "MariNO")
             mnum  = re.search(r"(?:^|[,;])\s*n[ºo\.]?\s*:?\s*([\d\w\-\/]+)", value, flags=re.IGNORECASE)
             ctx["NUMERO"]      = (mnum.group(1).strip() if mnum else "")
 
@@ -93,7 +86,6 @@ def parse_bloco(texto: str) -> dict:
         if "bairro" in lab:             ctx["BAIRRO"] = value; continue
         if "cep" in lab:                ctx["CEP"] = value; continue
 
-        # CIDADE "Maringá - ESTADO: PR" -> CIDADE=Maringá / ESTADO=PR
         if "cidade" in lab and "estado" in lab:
             m = re.search(
                 r"^\s*([^,\-]+)[,\-]?\s*(?:estado\s*:\s*|uf\s*:\s*)?([A-Za-z]{2})\s*$",
@@ -142,97 +134,35 @@ def escolher_modelo() -> Path | None:
         return p
     return None
 
-# --------- helper de nome: 02_Procuracao_Consig_Nome_Autor.ext ----------
 def gerar_nome_arquivo(nome: str, extensao: str) -> Path:
-    """
-    Gera caminho na pasta SAIDA com o formato:
-    02_Procuracao_Consig_Nome_Autor.ext
-    """
     if not nome:
         sufixo = "Autor"
     else:
-        # troca espaços por "_" e remove duplos
         sufixo = re.sub(r"\s+", "_", nome.strip())
     filename = f"02_Procuracao_Consig_{sufixo}.{extensao}"
     return SAIDA_DIR / filename
-
-# ---------------- negrito APENAS no nome, preservando fonte ----------------
-def _apply_base_font(dst_run, base_run):
-    """Copia fonte/tamanho/estilo do run base (ex.: Montserrat)."""
-    if not base_run:
-        return
-    f_dst, f_base = dst_run.font, base_run.font
-    # fonte
-    if f_base.name:
-        f_dst.name = f_base.name
-        rPr = dst_run._element.get_or_add_rPr()
-        rFonts = rPr.rFonts
-        if rFonts is None:
-            rFonts = OxmlElement("w:rFonts")
-            rPr.append(rFonts)
-        for key in ("w:ascii", "w:hAnsi", "w:eastAsia", "w:cs"):
-            rFonts.set(qn(key), f_base.name)
-    # demais atributos úteis
-    f_dst.size   = f_base.size
-    f_dst.italic = f_base.italic
-    if f_base.color and f_base.color.rgb:
-        f_dst.color.rgb = f_base.color.rgb
-
-def _bold_substring_in_paragraph(paragraph, target: str):
-    if not target:
-        return
-
-    # guarda o 1º run como referência de formatação (Montserrat)
-    base_run = paragraph.runs[0] if paragraph.runs else None
-
-    full = "".join(r.text for r in paragraph.runs)
-    if not full:
-        return
-
-    # localizar todas ocorrências (case-sensitive)
-    idxs, start = [], 0
-    while True:
-        i = full.find(target, start)
-        if i == -1:
-            break
-        idxs.append((i, i + len(target)))
-        start = i + len(target)
-    if not idxs:
-        return
-
-    # “limpa” textos anteriores mas preserva o parágrafo
-    for r in paragraph.runs:
-        r.text = ""
-
-    # recria runs preservando fonte do base_run
-    cursor = 0
-    for a, b in idxs:
-        if a > cursor:
-            r1 = paragraph.add_run(full[cursor:a])
-            _apply_base_font(r1, base_run)
-        r2 = paragraph.add_run(full[a:b])
-        _apply_base_font(r2, base_run)
-        r2.bold = True  # apenas o nome
-        cursor = b
-    if cursor < len(full):
-        r3 = paragraph.add_run(full[cursor:])
-        _apply_base_font(r3, base_run)
 
 def bold_nome_everywhere(docx_path: Path, nome: str):
     if not nome:
         return
     try:
         doc = Document(str(docx_path))
+
         for p in doc.paragraphs:
-            _bold_substring_in_paragraph(p, nome)
+            for r in p.runs:
+                if nome in r.text:
+                    r.bold = True
+
         for t in doc.tables:
             for row in t.rows:
                 for cell in row.cells:
                     for p in cell.paragraphs:
-                        _bold_substring_in_paragraph(p, nome)
+                        for r in p.runs:
+                            if nome in r.text:
+                                r.bold = True
+
         doc.save(str(docx_path))
     except Exception:
-        # se der erro, não derruba o fluxo; só não aplica o bold
         pass
 
 def try_convert_with_soffice(src_docx: Path, dst_pdf: Path) -> bool:
@@ -251,7 +181,6 @@ def try_convert_with_soffice(src_docx: Path, dst_pdf: Path) -> bool:
     except Exception:
         return False
 
-# ----------------------------- Rotas -----------------------------
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -339,7 +268,6 @@ async def gerar_pdf(dados: str = Form(...)):
                 shutil.copyfile(out_pdf, final_pdf)
                 return FileResponse(final_pdf, filename=final_pdf.name)
             else:
-                # fallback: devolve DOCX no padrão 02_Procuracao_Consig_...
                 final_docx = gerar_nome_arquivo(nome_autor, "docx")
                 final_docx.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(out_docx, final_docx)
