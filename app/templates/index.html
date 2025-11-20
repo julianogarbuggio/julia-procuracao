@@ -4,66 +4,89 @@
     <meta charset="UTF-8">
     <title>Jul.IA – Automação de Procuração de Revisionais de Empréstimos Consignados</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
 </head>
 <body>
-<div class="page-shell">
-    <header class="topbar">
-        <div class="topbar-inner">
-            <div class="brand-block">
-                <div class="brand-pill">Jul.IA</div>
-                <div class="brand-text">
-                    <span class="brand-sub">Plataforma Inteligente</span>
-                    <h1>Automação de Procuração de Revisionais de Empréstimos Consignados</h1>
-                </div>
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="brand">
+            <div class="brand-logo">
+                <span>Jul.IA</span>
             </div>
-            <div class="brand-right">
-                <span class="tag">Fluxo Rápido</span>
-                <span class="tag secondary">Uso diário no escritório</span>
+            <div class="brand-text">
+                <h1>Plataforma Inteligente de Procuração &amp; Consignado</h1>
+                <p>Automação de Procuração de Revisionais de Empréstimos Consignados</p>
             </div>
         </div>
-    </header>
+        <div class="topbar-tags">
+            <span class="tag tag-primary">Fluxo Rápido</span>
+            <span class="tag tag-outline">Uso diário no escritório</span>
+        </div>
+    </div>
+</header>
 
-    <main class="content">
-        <section class="card hero-card">
-            <div class="hero-left">
-                <p class="hero-kicker">Painel Jul.IA</p>
-                <h2>Gere procurações, contratos e declarações em segundos</h2>
-                <p class="hero-desc">
-                    Copie o bloco de dados do cliente (site ou WhatsApp), cole na área abaixo e escolha se
-                    deseja baixar em DOCX ou PDF. O sistema faz toda a montagem com base no seu template.
+<main>
+    <!-- Bloco principal -->
+    <section class="card hero">
+        <div class="hero-header">
+            <h2>Painel Jul.IA – Procuração &amp; Consignado</h2>
+            <p>
+                Cole o bloco de dados do cliente, escolha o formato e deixe a Jul.IA cuidar do resto:
+                geração do DOCX, PDF (opcional) e envio para assinatura na ZapSign.
+            </p>
+        </div>
+
+        <form id="form-docs" method="post" class="form-grid">
+            <div class="form-main">
+                <label for="dados" class="label-main">Bloco de dados do cliente</label>
+                <textarea id="dados" name="dados" rows="14" required
+                          placeholder="Cole aqui o bloco gerado pelo formulário ou WhatsApp (Nome completo, Nacionalidade, Data de nascimento, Estado civil, Profissão, RG, CPF, ENDEREÇO COMPLETO, Bairro, CEP, CIDADE, WhatsApp, E-mail)..."></textarea>
+                <p class="hint">
+                    Use o mesmo padrão de preenchimento do seu formulário web / WhatsApp. A Jul.IA quebra endereço,
+                    normaliza cidade/UF e aplica o nome do cliente em negrito em todo o documento.
                 </p>
-                <ul class="steps">
-                    <li><span>1</span> Copiar o bloco de dados do cliente.</li>
-                    <li><span>2</span> Colar na área de texto única.</li>
-                    <li><span>3</span> Gerar DOCX ou PDF já nomeados no padrão do escritório.</li>
+            </div>
+
+            <div class="form-side">
+                <h3>Ações rápidas</h3>
+                <p class="hint">
+                    Escolha como deseja usar este bloco agora:
+                </p>
+                <div class="actions">
+                    <button type="button" class="btn primary" onclick="submitTo('/gerar-docx')">
+                        Gerar DOCX
+                    </button>
+                    <button type="button" class="btn secondary" onclick="submitTo('/gerar-pdf')">
+                        Gerar PDF (servidor)
+                    </button>
+                    <button type="button" class="btn zap" onclick="submitTo('/enviar-zapsign')">
+                        Enviar para assinatura na ZapSign
+                    </button>
+                </div>
+                <ul class="hint-list">
+                    <li>DOCX: <strong>02_Procuracao_Consig_Nome_Autor.docx</strong></li>
+                    <li>PDF servidor: usa LibreOffice (pode ter pequenas variações visuais).</li>
+                    <li>ZapSign: gera o PDF oficial e envia para assinatura com validade jurídica.</li>
                 </ul>
             </div>
-            <div class="hero-right">
-                <div class="hero-mini-card">
-                    <p class="mini-title">Padrão de nome de arquivo</p>
-                    <p class="mini-text">
-                        <code>02_Procuracao_Consig_Nome_Autor.docx</code><br>
-                        <code>02_Procuracao_Consig_Nome_Autor.pdf</code>
-                    </p>
-                    <p class="mini-foot">Organização automática por tipo de documento e cliente.</p>
-                </div>
-            </div>
-        </section>
+        </form>
+    </section>
 
-        <section class="card">
-            <div class="card-header-row">
-                <div>
-                    <p class="section-kicker">Guia rápido</p>
-                    <h3>Formato do bloco de dados esperado</h3>
-                </div>
-                <span class="section-pill">Copiar e colar</span>
+    <!-- Guia rápido -->
+    <section class="card">
+        <div class="section-header">
+            <div>
+                <h2>Guia rápido – Formato do bloco de dados esperado</h2>
+                <p class="section-sub">
+                    Padrão pensado para reaproveitar o mesmo texto do seu formulário web e do WhatsApp.
+                </p>
             </div>
-            <p class="section-desc">
-                Use o mesmo padrão de preenchimento do seu formulário web / WhatsApp. Você pode copiar o
-                bloco exatamente como chega para você e colar na área de texto abaixo.
-            </p>
-            <pre class="code-block">
+            <button type="button" class="mini-btn" onclick="copiarExemplo()">
+                Copiar exemplo
+            </button>
+        </div>
+
+        <pre id="exemplo-bloco" class="code">
 Nome completo:
 Nacionalidade:
 Data de nascimento:
@@ -77,38 +100,31 @@ CEP:
 CIDADE: , ESTADO:
 WhatsApp COM DDD:
 E-mail:
-            </pre>
-        </section>
+        </pre>
+    </section>
+</main>
 
-        <section class="card">
-            <p class="section-kicker">Entrada única</p>
-            <h3>Colar bloco de dados do cliente</h3>
-            <p class="section-desc">
-                Cole abaixo o bloco completo, exatamente no padrão acima. A partir dele o sistema montará
-                a procuração, declaração de hipossuficiência, contrato e declaração de ciência no seu template.
-            </p>
-            <form class="form-card">
-                <label for="dados">Bloco de dados do cliente</label>
-                <textarea id="dados" name="dados" rows="18" required></textarea>
-                <p class="field-help">
-                    Dica: no celular, pressione e segure no campo acima para colar diretamente do WhatsApp.
-                </p>
-                <div class="dual-actions">
-                    <button type="submit" class="btn primary full-width" formaction="/gerar-docx" formmethod="post">
-                        Gerar DOCX
-                    </button>
-                    <button type="submit" class="btn ghost full-width" formaction="/gerar-pdf" formmethod="post">
-                        Gerar PDF
-                    </button>
-                </div>
-            </form>
-        </section>
-    </main>
+<footer>
+    <p class="footer-main">© 2025 Juliano Garbuggio – Advocacia &amp; Consultoria</p>
+    <p class="footer-sub">Powered by Jul.IA – Inteligência Jurídica Automatizada</p>
+</footer>
 
-    <footer class="footer">
-        <p class="footer-main">© 2025 Juliano Garbuggio – Advocacia &amp; Consultoria</p>
-        <p class="footer-sub">Powered by Jul.IA – Inteligência Jurídica Automatizada</p>
-    </footer>
-</div>
+<script>
+    function submitTo(action) {
+        const form = document.getElementById('form-docs');
+        form.action = action;
+        form.method = 'post';
+        form.submit();
+    }
+
+    function copiarExemplo() {
+        const txt = document.getElementById('exemplo-bloco').innerText.trim();
+        navigator.clipboard.writeText(txt).then(() => {
+            alert('Exemplo copiado. Agora é só colar no seu formulário ou usar como base no WhatsApp.');
+        }).catch(() => {
+            alert('Não foi possível copiar automaticamente. Se quiser, selecione e copie manualmente.');
+        });
+    }
+</script>
 </body>
 </html>
