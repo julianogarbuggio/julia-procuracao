@@ -1,28 +1,34 @@
-# Jul.IA – Automação de Procuração e Consignado
+# 🧠 Jul.IA – Automação de Procuração de Revisionais de Empréstimos Consignados
 
-Sistema para geração automática de procurações e documentos de consignado em DOCX/PDF,
-com layout otimizado para uso diário (desktop e celular) e pronto para deploy no Railway.
+Sistema automatizado para geração instantânea de **procurações** ligadas a ações revisionais de empréstimos consignados, com:
 
-## Rodar localmente
+- preenchimento dinâmico a partir de um bloco de dados (formulário / WhatsApp),
+- template DOCX 100% padronizado,
+- negrito automático no nome do cliente em todo o documento,
+- exportação em DOCX,
+- **integração nativa com a ZapSign** para criar o PDF e enviar direto para assinatura eletrônica.
 
-```bash
-python -m venv .venv
-.venv\\Scripts\\activate  # Windows
-# source .venv/bin/activate  # Linux/macOS
+Pensado para uso diário em escritório, direto do navegador (desktop ou celular).
 
-pip install -r requirements.txt
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+---
 
-Depois acesse: http://127.0.0.1:8000
+## ✅ Funcionalidades
 
-## Deploy no Railway
+### Entrada de dados
 
-- Crie um novo projeto a partir deste repositório (Deploy from GitHub).
-- O Railway vai detectar o `Dockerfile`, instalar o LibreOffice + fontes necessárias
-  e rodar automaticamente o comando com `uvicorn`.
+- Bloco único no padrão:
 
-Os arquivos gerados seguem o padrão:
-
-- `02_Procuracao_Consig_Nome_Autor.docx`
-- `02_Procuracao_Consig_Nome_Autor.pdf`
+  ```text
+  Nome completo:
+  Nacionalidade:
+  Data de nascimento:
+  Estado civil:
+  Profissão:
+  RG:  - ESTADO:
+  CPF:
+  ENDEREÇO COMPLETO: , nº: , complemento:
+  Bairro:
+  CEP:
+  CIDADE: , ESTADO:
+  WhatsApp COM DDD:
+  E-mail:
