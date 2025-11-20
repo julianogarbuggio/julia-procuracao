@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Jul.IA – Automação de Procuração e Consignado</title>
+    <title>Jul.IA – Automação de Procuração de Revisionais de Empréstimos Consignados</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
@@ -14,7 +14,7 @@
                 <div class="brand-pill">Jul.IA</div>
                 <div class="brand-text">
                     <span class="brand-sub">Plataforma Inteligente</span>
-                    <h1>Automação de Procuração e Consignado</h1>
+                    <h1>Automação de Procuração de Revisionais de Empréstimos Consignados</h1>
                 </div>
             </div>
             <div class="brand-right">
@@ -28,15 +28,16 @@
         <section class="card hero-card">
             <div class="hero-left">
                 <p class="hero-kicker">Painel Jul.IA</p>
-                <h2>Gere procurações e documentos em segundos</h2>
+                <h2>Gere procurações, contratos e declarações em segundos</h2>
                 <p class="hero-desc">
-                    Cole o bloco de dados do cliente, clique em gerar e baixe o documento totalmente formatado,
-                    pronto para impressão ou assinatura digital.
+                    Copie o bloco de dados do cliente (site ou WhatsApp), cole na área abaixo e escolha se
+                    deseja baixar em DOCX ou PDF. O sistema faz toda a montagem com base no seu template.
                 </p>
-                <div class="hero-actions">
-                    <a href="/docx" class="btn primary">Gerar DOCX</a>
-                    <a href="/pdf" class="btn ghost">Gerar PDF</a>
-                </div>
+                <ul class="steps">
+                    <li><span>1</span> Copiar o bloco de dados do cliente.</li>
+                    <li><span>2</span> Colar na área de texto única.</li>
+                    <li><span>3</span> Gerar DOCX ou PDF já nomeados no padrão do escritório.</li>
+                </ul>
             </div>
             <div class="hero-right">
                 <div class="hero-mini-card">
@@ -45,7 +46,7 @@
                         <code>02_Procuracao_Consig_Nome_Autor.docx</code><br>
                         <code>02_Procuracao_Consig_Nome_Autor.pdf</code>
                     </p>
-                    <p class="mini-foot">Ideal para organização por cliente e por tipo de ação.</p>
+                    <p class="mini-foot">Organização automática por tipo de documento e cliente.</p>
                 </div>
             </div>
         </section>
@@ -59,39 +60,48 @@
                 <span class="section-pill">Copiar e colar</span>
             </div>
             <p class="section-desc">
-                Use o mesmo padrão de preenchimento do seu formulário web / WhatsApp. Basta copiar e colar o bloco
-                completo abaixo no gerador de DOCX ou PDF.
+                Use o mesmo padrão de preenchimento do seu formulário web / WhatsApp. Você pode copiar o
+                bloco exatamente como chega para você e colar na área de texto abaixo.
             </p>
             <pre class="code-block">
-Nome completo: Maria de Sá
-Nacionalidade: Brasileira
-Data de nascimento: 18/07/1986
-Estado civil: Solteira
-Profissão: Médica veterinária
-RG: 87422194 - ESTADO: PR
-CPF: 051.754.589-65
-ENDEREÇO COMPLETO: Rua X, nº: 70, complemento:
-Bairro: Centro
-CEP: 87000-000
-CIDADE: Maringá, ESTADO: PR
-WhatsApp COM DDD: 44 99999-0000
-E-mail: exemplo@exemplo.com
+Nome completo:
+Nacionalidade:
+Data de nascimento:
+Estado civil:
+Profissão:
+RG:  - ESTADO:
+CPF:
+ENDEREÇO COMPLETO: , nº: , complemento:
+Bairro:
+CEP:
+CIDADE: , ESTADO:
+WhatsApp COM DDD:
+E-mail:
             </pre>
         </section>
 
-        <section class="card info-card">
-            <div class="info-row">
-                <div>
-                    <p class="section-kicker">Fluxo de trabalho</p>
-                    <h3>Como usar no dia a dia</h3>
+        <section class="card">
+            <p class="section-kicker">Entrada única</p>
+            <h3>Colar bloco de dados do cliente</h3>
+            <p class="section-desc">
+                Cole abaixo o bloco completo, exatamente no padrão acima. A partir dele o sistema montará
+                a procuração, declaração de hipossuficiência, contrato e declaração de ciência no seu template.
+            </p>
+            <form class="form-card">
+                <label for="dados">Bloco de dados do cliente</label>
+                <textarea id="dados" name="dados" rows="18" required></textarea>
+                <p class="field-help">
+                    Dica: no celular, pressione e segure no campo acima para colar diretamente do WhatsApp.
+                </p>
+                <div class="dual-actions">
+                    <button type="submit" class="btn primary full-width" formaction="/gerar-docx" formmethod="post">
+                        Gerar DOCX
+                    </button>
+                    <button type="submit" class="btn ghost full-width" formaction="/gerar-pdf" formmethod="post">
+                        Gerar PDF
+                    </button>
                 </div>
-            </div>
-            <ol class="steps">
-                <li><span>1</span> Gere o bloco de dados pelo formulário padrão ou WhatsApp.</li>
-                <li><span>2</span> Cole o bloco na tela de <strong>DOCX</strong> ou <strong>PDF</strong>.</li>
-                <li><span>3</span> Baixe o arquivo já nomeado no padrão do escritório.</li>
-                <li><span>4</span> (Próxima etapa) Enviar diretamente para assinatura via ZapSign.</li>
-            </ol>
+            </form>
         </section>
     </main>
 

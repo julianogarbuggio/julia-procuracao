@@ -385,3 +385,21 @@ textarea:focus {
         font-size: 1.4rem;
     }
 }
+
+
+/* Ações lado a lado para DOCX / PDF */
+.dual-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+@media (min-width: 640px) {
+    .dual-actions {
+        flex-direction: row;
+    }
+    .dual-actions .btn.full-width {
+        width: 50%;
+    }
+}
