@@ -1,4 +1,4 @@
-/* Reset básico */
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -19,10 +19,10 @@
     --text-softer: #6b7280;
 }
 
-/* Fundo geral, modo noite gostoso para olho cansado de advogado */
+/* Corpo – modo noite, estilo Jul.IA */
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: radial-gradient(circle at top, #020617 0, #020617 35%, #020617 100%);
+    background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
@@ -37,13 +37,13 @@ body {
 }
 
 .topbar-inner {
-    max-width: 1080px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 14px 16px;
+    padding: 14px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 14px;
 }
 
 .brand {
@@ -52,14 +52,15 @@ body {
     gap: 12px;
 }
 
-.brand-pill {
-    background: radial-gradient(circle at 20% 20%, #4ade80 0, #22c55e 40%, #166534 100%);
-    color: #020617;
-    font-weight: 700;
-    padding: 8px 14px;
+.brand-logo {
     border-radius: 999px;
+    padding: 8px 14px;
+    background: radial-gradient(circle at 20% 20%, #4ade80 0, #22c55e 42%, #16a34a 80%);
+    box-shadow: 0 10px 25px rgba(34, 197, 94, 0.5);
+    color: #020617;
+    font-weight: 800;
     font-size: 0.8rem;
-    box-shadow: 0 10px 25px rgba(34, 197, 94, 0.45);
+    letter-spacing: 0.05em;
 }
 
 .brand-text h1 {
@@ -69,32 +70,32 @@ body {
 }
 
 .brand-text p {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-softer);
     margin-top: 2px;
 }
 
-.topbar-actions {
+.topbar-tags {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
 }
 
-.pill {
+.tag {
     border-radius: 999px;
     padding: 6px 12px;
     font-size: 0.78rem;
-    border: 1px solid rgba(148, 163, 184, 0.4);
+    border: 1px solid rgba(148, 163, 184, 0.45);
 }
 
-.pill-secondary {
-    background: rgba(56, 189, 248, 0.08);
-    border-color: rgba(56, 189, 248, 0.6);
+.tag-primary {
+    background: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.7);
     color: #e0f2fe;
 }
 
-.pill-outline {
+.tag-outline {
     background: transparent;
     color: var(--text-softer);
 }
@@ -102,10 +103,10 @@ body {
 /* Layout principal */
 main {
     flex: 1;
-    max-width: 1080px;
+    max-width: 1100px;
     width: 100%;
     margin: 18px auto 28px;
-    padding: 0 12px 24px;
+    padding: 0 14px 26px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -113,47 +114,51 @@ main {
 
 /* Cards */
 .card {
-    background: radial-gradient(circle at top left, #020617 0, #020617 65%);
+    background: radial-gradient(circle at top left, #020617 0, #020617 64%);
     border-radius: 18px;
-    padding: 18px 16px 18px;
+    padding: 18px 18px 20px;
     border: 1px solid var(--border-soft);
-    box-shadow: 0 22px 40px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8);
 }
 
 .card.hero {
-    border: 1px solid rgba(34, 197, 94, 0.35);
-    box-shadow: 0 24px 48px rgba(34, 197, 94, 0.24);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    box-shadow: 0 26px 56px rgba(34, 197, 94, 0.28);
 }
 
-.card h2 {
-    font-size: 1rem;
-    margin-bottom: 6px;
+.hero-header h2 {
+    font-size: 1.02rem;
+    margin-bottom: 4px;
 }
 
-.hero-text {
+.hero-header p {
     font-size: 0.9rem;
     color: var(--text-muted);
-    margin-bottom: 10px;
 }
 
-.section-hint {
-    font-size: 0.86rem;
-    color: var(--text-muted);
-    margin-bottom: 10px;
+/* Grid do formulário */
+.form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1.1fr);
+    gap: 18px;
+    margin-top: 14px;
 }
 
-/* Form principal */
+.form-main,
+.form-side {
+    display: flex;
+    flex-direction: column;
+}
+
 .label-main {
     display: block;
     font-size: 0.86rem;
     font-weight: 500;
-    margin-top: 4px;
     margin-bottom: 4px;
 }
 
 textarea {
     width: 100%;
-    margin-bottom: 12px;
     padding: 10px 12px;
     border-radius: 12px;
     border: 1px solid rgba(148, 163, 184, 0.55);
@@ -163,59 +168,76 @@ textarea {
     outline: none;
     font-size: 0.9rem;
     line-height: 1.35;
+    min-height: 260px;
 }
 
 textarea:focus {
     border-color: var(--accent-outline);
-    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.7);
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: var(--text-softer);
+    margin-top: 6px;
+}
+
+/* Lado direito / ações */
+.form-side h3 {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.form-side .hint {
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 /* Botões */
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 2px;
-    margin-bottom: 6px;
-}
-
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 9px 16px;
+    padding: 9px 14px;
     border-radius: 999px;
     border: none;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.08s ease, background 0.12s;
+    transition: transform 0.08s ease, box-shadow 0.08s ease,
+        filter 0.08s ease, background 0.12s;
     white-space: nowrap;
 }
 
 .btn.primary {
     background: linear-gradient(135deg, #22c55e, #16a34a);
     color: #020617;
-    box-shadow: 0 12px 26px rgba(34, 197, 94, 0.45);
+    box-shadow: 0 12px 26px rgba(34, 197, 94, 0.5);
 }
 
-.btn.outline {
+.btn.secondary {
     background: transparent;
     color: var(--accent-outline);
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.95);
 }
 
 .btn.zap {
     background: linear-gradient(135deg, #0ea5e9, #0369a1);
     color: #e0f2fe;
-    box-shadow: 0 14px 28px rgba(14, 165, 233, 0.45);
+    box-shadow: 0 14px 30px rgba(14, 165, 233, 0.55);
 }
 
 .btn:hover {
     transform: translateY(-1px);
-    filter: brightness(1.05);
+    filter: brightness(1.04);
 }
 
 .btn:active {
@@ -223,23 +245,56 @@ textarea:focus {
     box-shadow: none;
 }
 
+.hint-list {
+    font-size: 0.8rem;
+    color: var(--text-softer);
+    list-style: disc;
+    padding-left: 18px;
+}
+
+/* Guia rápido */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.section-header h2 {
+    font-size: 0.96rem;
+}
+
+.section-sub {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.mini-btn {
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    background: rgba(15, 23, 42, 0.9);
+    color: #e5e7eb;
+    cursor: pointer;
+}
+
+.mini-btn:hover {
+    border-color: var(--accent-outline);
+}
+
 /* Código de exemplo */
 .code {
     background: radial-gradient(circle at top, #020617 0, #020617 70%);
     border-radius: 12px;
     padding: 10px 12px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
     font-size: 0.8rem;
     white-space: pre-wrap;
     border: 1px solid rgba(148, 163, 184, 0.45);
     color: #e5e7eb;
-}
-
-/* Textos auxiliares */
-.hint-small {
-    font-size: 0.78rem;
-    color: var(--text-softer);
-    margin-top: 2px;
 }
 
 /* Rodapé */
@@ -261,15 +316,18 @@ footer {
     font-size: 0.76rem;
 }
 
-/* Desktop */
-@media (min-width: 768px) {
+/* Mobile */
+@media (max-width: 799px) {
     .topbar-inner {
-        padding: 14px 24px;
+        flex-direction: column;
+        align-items: flex-start;
     }
-    main {
-        padding: 0 20px 28px;
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
-    .card {
-        padding: 20px 20px 22px;
+
+    textarea {
+        min-height: 220px;
     }
 }
