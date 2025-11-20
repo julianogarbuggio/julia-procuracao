@@ -2,82 +2,82 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Jul.IA – Automação de Procuração de Revisionais de Empréstimos Consignados</title>
+    <title>Jul.IA – Procuração de Revisionais de Empréstimos Consignados</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
 </head>
 <body>
 <header class="topbar">
     <div class="topbar-inner">
-        <div class="brand">
-            <div class="brand-logo">
-                <span>Jul.IA</span>
-            </div>
+        <div class="topbar-left">
+            <div class="brand-pill">Jul.IA</div>
             <div class="brand-text">
-                <h1>Plataforma Inteligente de Procuração &amp; Consignado</h1>
-                <p>Automação de Procuração de Revisionais de Empréstimos Consignados</p>
+                <span class="brand-line-1">Plataforma Inteligente</span>
+                <span class="brand-line-2">Automação de Procuração &amp; Consignado</span>
             </div>
         </div>
-        <div class="topbar-tags">
-            <span class="tag tag-primary">Fluxo Rápido</span>
-            <span class="tag tag-outline">Uso diário no escritório</span>
+        <div class="topbar-right">
+            <span class="top-tag primary">Fluxo Rápido</span>
+            <span class="top-tag outline">Uso diário no escritório</span>
         </div>
     </div>
 </header>
 
 <main>
-    <!-- Bloco principal -->
-    <section class="card hero">
-        <div class="hero-header">
-            <h2>Painel Jul.IA – Procuração &amp; Consignado</h2>
-            <p>
-                Cole o bloco de dados do cliente, escolha o formato e deixe a Jul.IA cuidar do resto:
-                geração do DOCX, PDF (opcional) e envio para assinatura na ZapSign.
-            </p>
+    <!-- CARD PRINCIPAL -->
+    <section class="card card-main">
+        <div class="card-header">
+            <div>
+                <h1>Painel Jul.IA – Procuração de Revisionais de Empréstimos Consignados</h1>
+                <p>
+                    Cole o bloco de dados do cliente, escolha o formato e deixe a Jul.IA cuidar do DOCX,
+                    do PDF (opcional) e do envio para assinatura eletrônica via ZapSign.
+                </p>
+            </div>
         </div>
 
-        <form id="form-docs" method="post" class="form-grid">
-            <div class="form-main">
+        <form id="form-docs" class="form-layout" method="post">
+            <div class="form-block">
                 <label for="dados" class="label-main">Bloco de dados do cliente</label>
                 <textarea id="dados" name="dados" rows="14" required
                           placeholder="Cole aqui o bloco gerado pelo formulário ou WhatsApp (Nome completo, Nacionalidade, Data de nascimento, Estado civil, Profissão, RG, CPF, ENDEREÇO COMPLETO, Bairro, CEP, CIDADE, WhatsApp, E-mail)..."></textarea>
                 <p class="hint">
-                    Use o mesmo padrão de preenchimento do seu formulário web / WhatsApp. A Jul.IA quebra endereço,
-                    normaliza cidade/UF e aplica o nome do cliente em negrito em todo o documento.
+                    A Jul.IA quebra automaticamente endereço, normaliza cidade/UF, ajusta RG e aplica o nome do cliente
+                    em negrito em todo o documento, preservando integralmente o template.
                 </p>
             </div>
 
-            <div class="form-side">
-                <h3>Ações rápidas</h3>
+            <div class="actions-block">
+                <h2>Ações rápidas</h2>
                 <p class="hint">
-                    Escolha como deseja usar este bloco agora:
+                    Escolha como utilizar este bloco agora:
                 </p>
-                <div class="actions">
-                    <button type="button" class="btn primary" onclick="submitTo('/gerar-docx')">
-                        Gerar DOCX
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="submitTo('/gerar-docx')">
+                        📄 Gerar DOCX
                     </button>
-                    <button type="button" class="btn secondary" onclick="submitTo('/gerar-pdf')">
-                        Gerar PDF (servidor)
+                    <button type="button" class="btn btn-secondary" onclick="submitTo('/gerar-pdf')">
+                        🖨️ Gerar PDF (servidor)
                     </button>
-                    <button type="button" class="btn zap" onclick="submitTo('/enviar-zapsign')">
-                        Enviar para assinatura na ZapSign
+                    <button type="button" class="btn btn-zap" onclick="submitTo('/enviar-zapsign')">
+                        ✍️ Enviar para assinatura na ZapSign
                     </button>
                 </div>
                 <ul class="hint-list">
                     <li>DOCX: <strong>02_Procuracao_Consig_Nome_Autor.docx</strong></li>
-                    <li>PDF servidor: usa LibreOffice (pode ter pequenas variações visuais).</li>
+                    <li>PDF (servidor): usa LibreOffice no Linux (apenas como opção, pode variar levemente).</li>
                     <li>ZapSign: gera o PDF oficial e envia para assinatura com validade jurídica.</li>
                 </ul>
             </div>
         </form>
     </section>
 
-    <!-- Guia rápido -->
+    <!-- CARD GUIA RÁPIDO -->
     <section class="card">
-        <div class="section-header">
+        <div class="card-header card-header-small">
             <div>
                 <h2>Guia rápido – Formato do bloco de dados esperado</h2>
-                <p class="section-sub">
+                <p class="subtitle">
                     Padrão pensado para reaproveitar o mesmo texto do seu formulário web e do WhatsApp.
                 </p>
             </div>
@@ -119,11 +119,9 @@ E-mail:
 
     function copiarExemplo() {
         const txt = document.getElementById('exemplo-bloco').innerText.trim();
-        navigator.clipboard.writeText(txt).then(() => {
-            alert('Exemplo copiado. Agora é só colar no seu formulário ou usar como base no WhatsApp.');
-        }).catch(() => {
-            alert('Não foi possível copiar automaticamente. Se quiser, selecione e copie manualmente.');
-        });
+        navigator.clipboard.writeText(txt)
+            .then(() => alert('Exemplo copiado. Agora é só colar onde precisar.'))
+            .catch(() => alert('Não foi possível copiar automaticamente. Se quiser, selecione o texto e copie manualmente.'));
     }
 </script>
 </body>
