@@ -1,1 +1,50 @@
-<!DOCTYPE html><html><head><meta charset='utf-8'><title>Gerar DOCX · Jul.IA</title><link rel='stylesheet' href='/static/styles.css'><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body><header class='topbar'><div class='topbar-inner'><div class='brand'><span class='brand-pill'>Jul.IA</span><div class='brand-text'><h1>Automação de Procuração e Consignado</h1><p>Geração de documento em DOCX.</p></div></div></div></header><main><section class='card'><h2>Gerar documento em DOCX</h2><p class='section-hint'>Cole abaixo o bloco de dados completo do cliente. O arquivo será gerado com o nome <strong>02_Procuracao_Consig_Nome_Autor.docx</strong>.</p><form action='/gerar-docx' method='post' class='form-card'><label for='dados'>Bloco de dados do cliente</label><textarea id='dados' name='dados' rows='18' required></textarea><button type='submit' class='btn primary full'>Gerar DOCX</button></form></section><section class='card small'><a href='/' class='link-back'>← Voltar para o painel Jul.IA</a></section></main><footer><p class='footer-main'>Juliano Garbuggio – Advocacia &amp; Consultoria</p><p class='footer-sub'>Powered by Jul.IA – Inteligência Jurídica Automatizada</p></footer></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerar DOCX · Jul.IA – Automação de Procuração e Consignado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="page-shell">
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand-block">
+                <div class="brand-pill">Jul.IA</div>
+                <div class="brand-text">
+                    <span class="brand-sub">Automação de Documentos</span>
+                    <h1>Gerador de DOCX – Procuração e Consignado</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        <section class="card">
+            <p class="section-kicker">Passo único</p>
+            <h2>Colar bloco de dados do cliente</h2>
+            <p class="section-desc">
+                Cole abaixo o bloco completo, exatamente no padrão usado pelo formulário. O sistema irá
+                quebrar endereço, normalizar RG, CPF e montar o DOCX final.
+            </p>
+            <form action="/gerar-docx" method="post" class="form-card">
+                <label for="dados">Bloco de dados do cliente</label>
+                <textarea id="dados" name="dados" rows="18" required></textarea>
+                <p class="field-help">Dica: no celular, copie tudo do WhatsApp de uma vez e cole aqui.</p>
+                <button type="submit" class="btn primary full-width">Gerar DOCX</button>
+            </form>
+        </section>
+
+        <section class="card compact">
+            <a href="/" class="link-inline">← Voltar para o Painel Jul.IA</a>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-main">© 2025 Juliano Garbuggio – Advocacia &amp; Consultoria</p>
+        <p class="footer-sub">Powered by Jul.IA – Inteligência Jurídica Automatizada</p>
+    </footer>
+</div>
+</body>
+</html>

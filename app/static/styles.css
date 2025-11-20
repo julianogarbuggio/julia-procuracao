@@ -1,30 +1,387 @@
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#020617;color:#e5e7eb;margin:0;min-height:100vh;display:flex;flex-direction:column}
-.topbar{border-bottom:1px solid rgba(148,163,184,.25);background:#020617}
-.topbar-inner{max-width:980px;margin:0 auto;padding:16px 16px 14px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-pill{background:radial-gradient(circle at 20% 20%,#4ade80 0,#22c55e 40%,#166534 100%);color:#020617;font-weight:700;padding:8px 14px;border-radius:999px;font-size:.8rem;box-shadow:0 10px 25px rgba(34,197,94,.45)}
-.brand-text h1{font-size:1rem;font-weight:600;letter-spacing:.03em}
-.brand-text p{font-size:.8rem;color:#6b7280;margin-top:2px}
-main{flex:1;max-width:980px;width:100%;margin:18px auto 28px;padding:0 12px 20px;display:flex;flex-direction:column;gap:14px}
-.card{background:radial-gradient(circle at top left,#111827 0,#020617 58%);border-radius:18px;padding:18px 16px;border:1px solid rgba(148,163,184,.35);box-shadow:0 20px 40px rgba(0,0,0,.7)}
-.card.hero{border:1px solid rgba(34,197,94,.35);box-shadow:0 22px 48px rgba(34,197,94,.25)}
-.card.small{padding:10px 14px}
-.hero-text{font-size:.9rem;color:#9ca3af;margin-bottom:10px}
-.section-hint{font-size:.85rem;color:#9ca3af;margin-bottom:10px}
-.actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:999px;border:none;font-size:.9rem;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .08s,box-shadow .08s,filter .08s,background .12s}
-.btn.primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#020617;box-shadow:0 12px 26px rgba(34,197,94,.45)}
-.btn.outline{background:transparent;color:#38bdf8;border:1px solid rgba(148,163,184,.6);box-shadow:0 10px 20px rgba(15,23,42,.85)}
-.btn.full{width:100%;margin-top:10px}
-.btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.btn:active{transform:translateY(0);box-shadow:none}
-.form-card{margin-top:8px}
-label{display:block;font-size:.85rem;font-weight:500;margin-bottom:4px}
-textarea{width:100%;margin-top:2px;margin-bottom:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(148,163,184,.55);background:#020617;color:#e5e7eb;resize:vertical;outline:none;font-size:.9rem;line-height:1.35}
-textarea:focus{border-color:#38bdf8;box-shadow:0 0 0 1px rgba(56,189,248,.6)}
-.code{background:#020617;border-radius:12px;padding:10px 12px;font-family:ui-monospace,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:.78rem;white-space:pre-wrap;border:1px solid rgba(148,163,184,.5);color:#e5e7eb}
-.link-back{color:#38bdf8;text-decoration:none;font-size:.86rem}
-.link-back:hover{text-decoration:underline}
-footer{border-top:1px solid rgba(148,163,184,.25);padding:10px 16px 14px;text-align:center;font-size:.78rem;color:#6b7280;background:#020617}
-.footer-main{font-weight:500;margin-bottom:2px}
-.footer-sub{font-size:.76rem}
+/* Reset básico */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+    color: #e5e7eb;
+}
+
+/* Shell geral para facilitar centralização */
+.page-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    background: linear-gradient(120deg, #020617 0, #020617 40%, #020617 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.topbar-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.brand-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-pill {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 20% 20%, #4ade80 0, #22c55e 40%, #16a34a 100%);
+    color: #022c22;
+    font-weight: 700;
+    font-size: 0.8rem;
+    box-shadow: 0 14px 30px rgba(34, 197, 94, 0.5);
+}
+
+.brand-text h1 {
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+}
+
+.brand-sub {
+    display: block;
+    font-size: 0.74rem;
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.brand-right {
+    display: none;
+    gap: 6px;
+}
+
+.tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    font-size: 0.7rem;
+    color: #e5e7eb;
+}
+
+.tag.secondary {
+    border-color: rgba(56, 189, 248, 0.6);
+    color: #bae6fd;
+}
+
+.content {
+    flex: 1;
+    max-width: 1120px;
+    width: 100%;
+    margin: 18px auto 26px;
+    padding: 0 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Cards */
+.card {
+    background: radial-gradient(circle at top left, #0b1120 0, #020617 55%);
+    border-radius: 18px;
+    border: 1px solid rgba(30, 64, 175, 0.7);
+    padding: 16px 14px 16px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+}
+
+.hero-card {
+    border-color: rgba(34, 197, 94, 0.45);
+    box-shadow: 0 22px 50px rgba(22, 163, 74, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card.compact {
+    padding: 10px 14px;
+}
+
+.hero-left h2 {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+}
+
+.hero-kicker {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #a5b4fc;
+    margin-bottom: 4px;
+}
+
+.hero-desc {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-bottom: 10px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hero-mini-card {
+    border-radius: 14px;
+    border: 1px dashed rgba(148, 163, 184, 0.6);
+    padding: 10px 12px;
+    background: rgba(15, 23, 42, 0.9);
+    font-size: 0.8rem;
+}
+
+.mini-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.mini-text code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.75rem;
+    display: block;
+}
+
+.mini-foot {
+    margin-top: 6px;
+    color: #9ca3af;
+}
+
+/* Seções */
+.section-kicker {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #a5b4fc;
+    margin-bottom: 2px;
+}
+
+.card-header-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.card-header-row h3 {
+    font-size: 1.02rem;
+}
+
+.section-pill {
+    border-radius: 999px;
+    padding: 4px 10px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    font-size: 0.75rem;
+    color: #e5e7eb;
+}
+
+.section-desc {
+    font-size: 0.86rem;
+    color: #9ca3af;
+    margin-bottom: 8px;
+}
+
+/* Código exemplo */
+.code-block {
+    background: #020617;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.78rem;
+    color: #e5e7eb;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    overflow-x: auto;
+}
+
+/* Lista de passos */
+.steps {
+    list-style: none;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #e5e7eb;
+}
+
+.steps li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.steps li span {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.9);
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2px;
+}
+
+/* Formulários */
+.form-card {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+label {
+    font-size: 0.84rem;
+    font-weight: 500;
+}
+
+textarea {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.75);
+    background: radial-gradient(circle at top, #020617 0, #020617 70%);
+    padding: 10px 12px;
+    min-height: 260px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #e5e7eb;
+    resize: vertical;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.65);
+}
+
+.field-help {
+    font-size: 0.78rem;
+    color: #9ca3af;
+}
+
+/* Botões */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.12s ease;
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #022c22;
+    box-shadow: 0 16px 32px rgba(34, 197, 94, 0.45);
+}
+
+.btn.ghost {
+    background: transparent;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    color: #e5e7eb;
+}
+
+.btn.full-width {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Links */
+.link-inline {
+    color: #38bdf8;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.link-inline:hover {
+    text-decoration: underline;
+}
+
+/* Rodapé */
+.footer {
+    border-top: 1px solid rgba(148, 163, 184, 0.35);
+    padding: 10px 16px 16px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #9ca3af;
+    margin-top: auto;
+}
+
+.footer-main {
+    margin-bottom: 2px;
+}
+
+/* Mobile first: tudo já pensado para celular.
+   Ajustes extras para telas maiores abaixo. */
+@media (min-width: 720px) {
+    .topbar-inner {
+        padding: 16px 22px 14px;
+    }
+    .brand-text h1 {
+        font-size: 1.1rem;
+    }
+    .brand-right {
+        display: flex;
+    }
+    .content {
+        padding: 0 20px 26px;
+        gap: 18px;
+    }
+    .card {
+        padding: 18px 18px 20px;
+    }
+    .hero-card {
+        flex-direction: row;
+        align-items: stretch;
+    }
+    .hero-left, .hero-right {
+        flex: 1;
+    }
+}
+
+@media (min-width: 1024px) {
+    textarea {
+        min-height: 320px;
+        font-size: 0.95rem;
+    }
+    .hero-left h2 {
+        font-size: 1.4rem;
+    }
+}

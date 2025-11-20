@@ -5,7 +5,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y libreoffice && \
+    apt-get install -y libreoffice \
+                       fonts-liberation \
+                       fonts-dejavu \
+                       fonts-freefont-ttf \
+                       fonts-noto-core && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
